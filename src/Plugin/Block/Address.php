@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
+ *
  * User: carlosrevillo
  * Date: 27/05/16
- * Time: 14:38
+ * Time: 14:38.
  */
 
 namespace Drupal\tantaweb\Plugin\Block;
@@ -20,8 +21,12 @@ use Drupal\Core\Block\BlockBase;
  * )
  */
 class Address extends BlockBase {
+
   /**
-   * @inheritdoc
+   * Builds the logo block.
+   *
+   * @return array
+   *   A renderable array representing the content of the block.
    */
   public function build() {
     return [

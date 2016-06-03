@@ -79,6 +79,9 @@ env:
     # This needs to match your .coveralls.yml file.
     - DRUPAL_TI_COVERAGE_FILE="build/logs/clover.xml"
 
+    - PHPCS_VERSION='2.0.*@dev'
+    - CODER_VERSION='dev-8.x-2.x'
+
     # Debug options
     #- DRUPAL_TI_DEBUG="-x -v"
     # Set to "all" to output all files, set to e.g. "xvfb selenium" or "selenium",
@@ -104,6 +107,12 @@ before_install:
   #- cd ./tests
   - composer global require "lionsad/drupal_ti:1.*"
   - drupal-ti before_install
+   # Codesniffer and Coder
+  - composer global require "squizlabs/php_codesniffer:$PHPCS_VERSION"
+  - composer global require drupal/coder:8.2.0-beta1
+  - ln -s ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal ~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards
+  - phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
+
 
 install:
   - drupal-ti install
@@ -112,7 +121,9 @@ before_script:
   - drupal-ti before_script
 
 script:
+  - drupal-ti --include .travis-phpcs.sh
   - drupal-ti script
+
 
 after_script:
   - drupal-ti after_script

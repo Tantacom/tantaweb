@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
+ *
  * User: carlosrevillo
  * Date: 21/05/16
- * Time: 19:43
+ * Time: 19:43.
  */
 
 /**
@@ -30,7 +31,10 @@ use Drupal\Core\Link;
 class Logo extends BlockBase {
 
   /**
-   * @inheritdoc
+   * Builds the logo block.
+   *
+   * @return array
+   *   A renderable array representing the content of the block.
    */
   public function build() {
     $url = Url::fromRoute('<front>');
@@ -39,7 +43,7 @@ class Logo extends BlockBase {
       '#theme' => 'image',
       '#uri' => theme_get_setting('logo.url'),
       '#alt' => $this->t('Home'),
-      '#access' => true
+      '#access' => TRUE
     ];
 
     $link = [

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file SocialLinksTest.php.
+ */
+
 namespace Drupal\tantaweb\Tests;
 
 use Drupal\simpletest\WebTestBase;
@@ -13,17 +17,22 @@ class SocialLinksTest extends WebTestBase {
 
   protected $user;
 
-  public static $modules = array('social_media_links', 'block', 'node', 'tantaweb');
+  public static $modules = array(
+    'social_media_links',
+    'block',
+    'node',
+    'tantaweb',
+  );
 
   /**
-   * Perform any initial set up tasks that run before every test method
+   * Perform any initial set up tasks that run before every test method.
    */
   protected function setUp() {
     parent::setUp();
   }
 
   /**
-   * Tests that the 'front' path has links to social networks
+   * Tests that the 'front' path has links to social networks.
    */
   public function testAddSocialLinks() {
     $user = $this->drupalCreateUser(array('access content', 'administer blocks'));
@@ -37,7 +46,7 @@ class SocialLinksTest extends WebTestBase {
     $edit = array(
       'settings[label]' => $block['settings[label]'],
       'id' => $block['id'],
-      'region' => $block['region']
+      'region' => $block['region'],
     );
     $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Demo block created.');
@@ -45,7 +54,7 @@ class SocialLinksTest extends WebTestBase {
     $edit = array(
       'settings[platforms][twitter][value]' => 'https://www.twitter.com/tantacom',
       'settings[platforms][googleplus][value]' => 'https://alinktogoogleplus.com',
-      'settings[platforms][feedburner][value]' => 'https://feedburner/de/tanta'
+      'settings[platforms][feedburner][value]' => 'https://feedburner/de/tanta',
     );
     $this->drupalPostForm('admin/structure/block/manage/' . $block['id'], $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Demo block saved.');

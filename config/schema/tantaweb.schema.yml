@@ -1,0 +1,151 @@
+block.settings.social_media_links_block:
+  type: block_settings
+  label: 'Configuración Social Media'
+  mapping:
+    appearance:
+      type: mapping
+      label: 'Presentación'
+      mapping:
+        orientation:
+          type: string
+          label: 'Horizontal o Vertical'
+        show_name:
+          type: boolean
+          label: 'Show Name'
+    iconset:
+      type: mapping
+      mapping:
+        style:
+          type: string
+        installed_iconsets:
+          type: mapping
+          mapping:
+            fontawesome:
+              type: mapping
+              mapping:
+                examples:
+                  type: string
+
+    link_attributes:
+      type: mapping
+      mapping:
+        target:
+          type: string
+        rel:
+          type: string
+
+    platforms:
+      type: mapping
+      mapping:
+        instagram:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        linkedin:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        pinterest:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        youtube_channel:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        drupal:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        slideshare:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        youtube:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        vimeo:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        tumblr:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        rss:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        contact:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        facebook:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        email:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        googleplus:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        twitter:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer
+        feedburner:
+          type: mapping
+          mapping:
+            value:
+              type: string
+            weight:
+              type: integer

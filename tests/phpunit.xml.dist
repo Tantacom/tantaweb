@@ -1,0 +1,19 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+
+<phpunit colors="true" bootstrap="/home/travis/build/Tantacom/drupal-8/drupal/core/tests/bootstrap.php">
+  <testsuites>
+    <testsuite name="tantaweb">
+        <directory>./src/Unit/</directory>
+    </testsuite>
+  </testsuites>
+  <!-- Filter for coverage reports. -->
+  <filter>
+    <blacklist>
+      <directory>./vendor</directory>
+    </blacklist>
+    <whitelist>
+      <directory>../src</directory>
+    </whitelist>
+  </filter>
+</phpunit>
+

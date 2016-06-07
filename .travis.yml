@@ -68,7 +68,7 @@ env:
     - DRUPAL_TI_BEHAT_BROWSER="firefox"
 
     # PHPUnit specific commandline arguments.
-    - DRUPAL_TI_PHPUNIT_ARGS=""
+    - DRUPAL_TI_PHPUNIT_ARGS="-vc phpunit.xml.dist"
     # Specifying the phpunit-core src/ directory is useful when e.g. a vendor/
     # directory is present in the module directory, which phpunit would then
     # try to find tests in. This option is relative to $TRAVIS_BUILD_DIR.
@@ -91,7 +91,7 @@ env:
   matrix:
     # [[[ SELECT ANY OR MORE OPTIONS ]]]
     #- DRUPAL_TI_RUNNERS="phpunit"
-    - DRUPAL_TI_RUNNERS="simpletest"
+    - DRUPAL_TI_RUNNERS="phpunit simpletest"
     #- DRUPAL_TI_RUNNERS="behat"
     #- DRUPAL_TI_RUNNERS="phpunit simpletest behat"
     # Use phpunit-core to test modules with phpunit with Drupal 8 core.
@@ -104,7 +104,7 @@ mysql:
 
 before_install:
   - composer self-update
-  #- cd ./tests
+  - cd ./tests
   - composer global require "lionsad/drupal_ti:1.*"
   - drupal-ti before_install
    # Codesniffer and Coder

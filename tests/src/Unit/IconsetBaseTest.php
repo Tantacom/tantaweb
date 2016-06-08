@@ -6,6 +6,8 @@
 
 namespace Drupal\social_media_links {
 
+  use Drupal\Core\Site\Settings;
+
   /**
    * Mock function.
    *
@@ -13,7 +15,23 @@ namespace Drupal\social_media_links {
    *   TRUE
    */
   function drupal_get_profile() {
-    return TRUE;
+    global $install_state;
+
+    if (drupal_installation_attempted()) {
+      // If the profile has been selected return it.
+      if (isset($install_state['parameters']['profile'])) {
+        $profile = $install_state['parameters']['profile'];
+      }
+      else {
+        $profile = NULL;
+      }
+    }
+    else {
+      // Fall back to NULL, if there is no 'install_profile' setting.
+      $profile = Settings::get('install_profile');
+    }
+
+    return $profile;
   }
 
   /**
@@ -24,6 +42,18 @@ namespace Drupal\social_media_links {
    */
   function drupal_get_path() {
     return TRUE;
+  }
+
+  /**
+   * Returns TRUE if a Drupal installation is currently being attempted.
+   */
+  function drupal_installation_attempted() {
+    // This cannot rely on the MAINTENANCE_MODE constant, since that would prevent
+    // tests from using the non-interactive installer, in which case Drupal
+    // only happens to be installed within the same request, but subsequently
+    // executed code does not involve the installer at all.
+    // @see install_drupal()
+    return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
   }
 }
 

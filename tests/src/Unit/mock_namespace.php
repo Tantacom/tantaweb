@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file Mock mock_namespace.php.
+ */
+
 namespace Drupal\social_media_links {
 
   use Drupal\Core\Site\Settings;

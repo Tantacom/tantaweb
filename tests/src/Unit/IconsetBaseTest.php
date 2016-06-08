@@ -4,7 +4,6 @@
  * @file IconsetBaseTest.php.
  */
 
-
 namespace Drupal\Tests\tantaweb\Unit;
 
 use Drupal\Core\DependencyInjection\Container;
@@ -167,4 +166,3 @@ class IconsetBaseTest extends UnitTestCase {
     $this->assertEmpty($exploded_style['iconset']);
   }
 }
-

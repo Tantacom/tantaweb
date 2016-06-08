@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: carlosrevillo
- * Date: 8/06/16
- * Time: 16:01
- */
 
 /**
- * @file IconsetFinderServiceTest.php
+ * @file IconsetFinderServiceTest.php.
  */
 
 namespace Drupal\Tests\tantaweb\Unit;
@@ -20,9 +14,11 @@ include_once __DIR__ . '/mock_namespace.php';
 
 /**
  * Class IconsetFinderServiceTest.
+ *
  * @package Drupal\social_media_links
  *
  * @coversDefault Drupal\social_media_links\IconsetFinderService
+ *
  * @group tantaweb
  */
 class IconsetFinderServiceTest extends UnitTestCase {
@@ -31,6 +27,9 @@ class IconsetFinderServiceTest extends UnitTestCase {
 
   protected $class;
 
+  /**
+   * Setup the test.
+   */
   public function setUp() {
     $container = new Container();
     \Drupal::setContainer($container);
@@ -59,8 +58,8 @@ class IconsetFinderServiceTest extends UnitTestCase {
     $mock->expects($this->once())
       ->method('setIconsets');
 
-    $reflectedClass = new \ReflectionClass($classname);
-    $constructor = $reflectedClass->getConstructor();
+    $reflected_class = new \ReflectionClass($classname);
+    $constructor = $reflected_class->getConstructor();
     $constructor->invoke($mock, 4);
   }
 
@@ -74,6 +73,9 @@ class IconsetFinderServiceTest extends UnitTestCase {
     $this->assertNull($this->class->getIconsets());
   }
 
+  /**
+   * Test for the getPath method.
+   */
   public function testGetPath() {
     $reflection = new \ReflectionClass($this->class);
     $reflection_property = $reflection->getProperty('iconsets');
@@ -86,4 +88,3 @@ class IconsetFinderServiceTest extends UnitTestCase {
     $this->assertNull($this->class->getPath('non_existent_iconset'));
   }
 }
-

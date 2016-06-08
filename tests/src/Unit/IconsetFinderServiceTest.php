@@ -10,93 +10,80 @@
  * @file IconsetFinderServiceTest.php
  */
 
-namespace Drupal\social_media_links {
+namespace Drupal\Tests\tantaweb\Unit;
 
-  use Drupal\Core\Site\Settings;
+use Drupal\Core\DependencyInjection\Container;
+use Drupal\social_media_links\IconsetFinderService;
+use Drupal\Tests\UnitTestCase;
 
-  /**
-   * Mock function.
-   *
-   * @return bool
-   *   TRUE
-   */
-  function drupal_get_profile() {
-    global $install_state;
+include_once __DIR__ . '/mock_namespace.php';
 
-    if (drupal_installation_attempted()) {
-      // If the profile has been selected return it.
-      if (isset($install_state['parameters']['profile'])) {
-        $profile = $install_state['parameters']['profile'];
-      }
-      else {
-        $profile = NULL;
-      }
-    }
-    else {
-      // Fall back to NULL, if there is no 'install_profile' setting.
-      $profile = Settings::get('install_profile');
-    }
+/**
+ * Class IconsetFinderServiceTest.
+ * @package Drupal\social_media_links
+ *
+ * @coversDefault Drupal\social_media_links\IconsetFinderService
+ * @group tantaweb
+ */
+class IconsetFinderServiceTest extends UnitTestCase {
 
-    return $profile;
+  protected $mock;
+
+  protected $class;
+
+  public function setUp() {
+    $container = new Container();
+    \Drupal::setContainer($container);
+
+    $kernel_mock = $this->getMockBuilder('Drupal\Core\DrupalKernel')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->set('kernel', $kernel_mock);
+
+    $this->class = new IconsetFinderService();
   }
 
   /**
-   * Mock function.
-   *
-   * @return bool
-   *   TRUE
+   * Test constructor calls setters.
    */
-  function drupal_get_path() {
-    return TRUE;
+  public function testConstructorShouldSetDirsAndIconsSets() {
+    $classname = 'Drupal\social_media_links\IconsetFinderService';
+
+    $mock = $this->getMockBuilder($classname)
+      ->setMethods(['setSearchDirs', 'setIconsets'])
+      ->getMock();
+
+    $mock->expects($this->once())
+      ->method('setSearchDirs');
+
+    $mock->expects($this->once())
+      ->method('setIconsets');
+
+    $reflectedClass = new \ReflectionClass($classname);
+    $constructor = $reflectedClass->getConstructor();
+    $constructor->invoke($mock, 4);
   }
 
   /**
-   * Returns TRUE if a Drupal installation is currently being attempted.
+   * Tests if properties are set by checking if they are arrays.
+   *
+   * @todo fix when social_media_links fix bug with getIconsets.
    */
-  function drupal_installation_attempted() {
-    // This cannot rely on the MAINTENANCE_MODE constant, since that would prevent
-    // tests from using the non-interactive installer, in which case Drupal
-    // only happens to be installed within the same request, but subsequently
-    // executed code does not involve the installer at all.
-    // @see install_drupal()
-    return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
+  public function testPropertiesAreSet() {
+    $this->assertTrue(is_array($this->class->getSearchDirs()));
+    $this->assertNull($this->class->getIconsets());
+  }
+
+  public function testGetPath() {
+    $reflection = new \ReflectionClass($this->class);
+    $reflection_property = $reflection->getProperty('iconsets');
+    $reflection_property->setAccessible(TRUE);
+
+    $reflection_property->setValue($this->class,
+      array('iconset_id' => 'iconset_1'));
+
+    $this->assertEquals('iconset_1', $this->class->getPath('iconset_id'));
+    $this->assertNull($this->class->getPath('non_existent_iconset'));
   }
 }
 
-namespace Drupal\Tests\tantaweb\Unit {
-
-  use Drupal\Core\DependencyInjection\Container;
-  use Drupal\Tests\UnitTestCase;
-
-  /**
-   * Class IconsetFinderServiceTest.
-   * @package Drupal\social_media_links
-   *
-   * @coversDefault Drupal\social_media_links\IconsetFinderService
-   * @group tantaweb
-   */
-  class IconsetFinderServiceTest extends UnitTestCase {
-
-    protected $mock;
-
-    protected $class;
-
-    public function setUp() {
-      $container = new Container();
-      \Drupal::setContainer($container);
-
-      $kernel_mock = $this->getMockBuilder('Drupal\Core\DrupalKernel')
-        ->disableOriginalConstructor()
-        ->getMock();
-      $container->set('kernel', $kernel_mock);
-
-      $this->mock = $this->getMockBuilder('Drupal\social_media_links\IconsetFinderService')
-        ->getMock();
-      $this->mock->__construct();
-    }
-
-    public function testProperties() {
-      var_dump($this->mock->getIconsets());
-    }
-  }
-}

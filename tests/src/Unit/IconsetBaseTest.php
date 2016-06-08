@@ -4,217 +4,167 @@
  * @file IconsetBaseTest.php.
  */
 
-namespace Drupal\social_media_links {
 
-  use Drupal\Core\Site\Settings;
+namespace Drupal\Tests\tantaweb\Unit;
+
+use Drupal\Core\DependencyInjection\Container;
+use Drupal\Tests\UnitTestCase;
+
+include_once __DIR__ . '/mock_namespace.php';
+
+/**
+ * Test the IconsetBase Class.
+ *
+ * @coversDefaultClass Drupal\social_media_links\IconsetBase
+ * @group tantaweb
+ */
+class IconsetBaseTest extends UnitTestCase {
+
+  protected $mock;
+
+  protected $iconBaseConfiguration = array();
+
+  protected $iconBasePluginId = '';
+
+  protected $iconBasePluginDefinition = array(
+    'name' => 'a_name',
+    'publisher' => 'a_publisher',
+    'publisherUrl' => 'a_publisher_url',
+    'downloadUrl' => 'a_download_url',
+  );
 
   /**
-   * Mock function.
-   *
-   * @return bool
-   *   TRUE
+   * Setup the test.
    */
-  function drupal_get_profile() {
-    global $install_state;
+  protected function setUp() {
+    $container = new Container();
+    \Drupal::setContainer($container);
 
-    if (drupal_installation_attempted()) {
-      // If the profile has been selected return it.
-      if (isset($install_state['parameters']['profile'])) {
-        $profile = $install_state['parameters']['profile'];
-      }
-      else {
-        $profile = NULL;
-      }
-    }
-    else {
-      // Fall back to NULL, if there is no 'install_profile' setting.
-      $profile = Settings::get('install_profile');
-    }
+    $kernel_mock = $this->getMockBuilder('Drupal\Core\DrupalKernel')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->set('kernel', $kernel_mock);
 
-    return $profile;
+    $iconset_finder_service_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetFinderService')
+      ->getMock();
+    $container->set('social_media_links.finder',
+      $iconset_finder_service_mock);
+
+    $iconset_finder_service_mock->expects($this->once())
+      ->method('getPath')
+      ->with($this->iconBasePluginId)
+      ->willReturn('a_icon_path');
+
+    // Get mock, without the constructor being called.
+    $this->mock = $this->getMockBuilder('Drupal\social_media_links\IconsetBase')
+      ->setConstructorArgs(array(
+        $this->iconBaseConfiguration,
+        $this->iconBasePluginId,
+        $this->iconBasePluginDefinition,
+      ))
+      ->getMockForAbstractClass();
   }
 
   /**
-   * Mock function.
-   *
-   * @return bool
-   *   TRUE
+   * Test for the get Name method.
    */
-  function drupal_get_path() {
-    return TRUE;
+  public function testGetName() {
+    $this->assertEquals('a_name', $this->mock->getName());
   }
 
   /**
-   * Returns TRUE if a Drupal installation is currently being attempted.
+   * Test for the getPublisher method.
    */
-  function drupal_installation_attempted() {
-    // This cannot rely on the MAINTENANCE_MODE constant, since that would prevent
-    // tests from using the non-interactive installer, in which case Drupal
-    // only happens to be installed within the same request, but subsequently
-    // executed code does not involve the installer at all.
-    // @see install_drupal()
-    return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
+  public function testGetPublisher() {
+    $this->assertEquals('a_publisher', $this->mock->getPublisher());
   }
-}
-
-namespace Drupal\Tests\tantaweb\Unit {
-
-  use Drupal\Core\DependencyInjection\Container;
-  use Drupal\Tests\UnitTestCase;
 
   /**
-   * Test the IconsetBase Class.
-   *
-   * @coversDefaultClass Drupal\social_media_links\IconsetBase
-   * @group tantaweb
+   * Test for the getPublisherUrl method.
    */
-  class IconsetBaseTest extends UnitTestCase {
+  public function testGetPublisherUrl() {
+    $this->assertEquals('a_publisher_url', $this->mock->getPublisherUrl());
+  }
 
-    protected $mock;
+  /**
+   * Test for the getDownloadUrl method.
+   */
+  public function testGDownloadUrl() {
+    $this->assertEquals('a_download_url', $this->mock->getDownloadUrl());
+  }
 
-    protected $iconBaseConfiguration = array();
+  /**
+   * Test for the getLibrary method.
+   */
+  public function testGetLibraryShouldReturnNull() {
+    $this->assertNull($this->mock->getLibrary());
+  }
 
-    protected $iconBasePluginId = '';
+  /**
+   * Test for the getPath method.
+   */
+  public function testGetPath() {
+    $this->assertEquals('a_icon_path', $this->mock->getPath());
+  }
 
-    protected $iconBasePluginDefinition = array(
-      'name' => 'a_name',
-      'publisher' => 'a_publisher',
-      'publisherUrl' => 'a_publisher_url',
-      'downloadUrl' => 'a_download_url',
-    );
+  /**
+   * Test for the getIconElement method.
+   */
+  public function testGetIconElementShouldReturnAnArrayWithKeys() {
 
-    /**
-     * Setup the test.
-     */
-    protected function setUp() {
-      $container = new Container();
-      \Drupal::setContainer($container);
+    $platform = $this->getMockBuilder('Drupal\social_media_links\PlatformBase')
+      ->setConstructorArgs([[], 'platform', []])
+      ->getMock();
 
-      $kernel_mock = $this->getMockBuilder('Drupal\Core\DrupalKernel')
-        ->disableOriginalConstructor()
-        ->getMock();
-      $container->set('kernel', $kernel_mock);
+    $platform->expects($this->once())
+      ->method('getIconName')
+      ->willReturn('a_icon_name');
 
-      $iconset_finder_service_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetFinderService')
-        ->getMock();
-      $container->set('social_media_links.finder',
-        $iconset_finder_service_mock);
+    $this->mock->expects(
+      $this->once()
+    )
+      ->method('getIconPath')
+      ->willReturn('a_icon_path');
 
-      $iconset_finder_service_mock->expects($this->once())
-        ->method('getPath')
-        ->with($this->iconBasePluginId)
-        ->willReturn('a_icon_path');
+    $icon_element = $this->mock->getIconElement($platform, 'a_style');
+    $this->assertArrayHasKey('#theme', $icon_element);
+    $this->assertArrayHasKey('#uri', $icon_element);
 
-      // Get mock, without the constructor being called.
-      $this->mock = $this->getMockBuilder('Drupal\social_media_links\IconsetBase')
-        ->setConstructorArgs(array(
-          $this->iconBaseConfiguration,
-          $this->iconBasePluginId,
-          $this->iconBasePluginDefinition,
-        ))
-        ->getMockForAbstractClass();
-    }
+    $this->assertEquals('image', $icon_element['#theme']);
+    $this->assertEquals('a_icon_path', $icon_element['#uri']);
+  }
 
-    /**
-     * Test for the get Name method.
-     */
-    public function testGetName() {
-      $this->assertEquals('a_name', $this->mock->getName());
-    }
+  /**
+   * Test for the explodeStyle method.
+   */
+  public function testExplodeStyle() {
+    $style = "part_1:part_2";
 
-    /**
-     * Test for the getPublisher method.
-     */
-    public function testGetPublisher() {
-      $this->assertEquals('a_publisher', $this->mock->getPublisher());
-    }
+    $exploded_style = $this->mock->explodeStyle($style);
 
-    /**
-     * Test for the getPublisherUrl method.
-     */
-    public function testGetPublisherUrl() {
-      $this->assertEquals('a_publisher_url', $this->mock->getPublisherUrl());
-    }
+    $this->assertArrayHasKey('iconset', $exploded_style);
+    $this->assertArrayHasKey('style', $exploded_style);
 
-    /**
-     * Test for the getDownloadUrl method.
-     */
-    public function testGDownloadUrl() {
-      $this->assertEquals('a_download_url', $this->mock->getDownloadUrl());
-    }
+    $this->assertEquals($exploded_style['iconset'], 'part_1');
+    $this->assertEquals($exploded_style['style'], 'part_2');
 
-    /**
-     * Test for the getLibrary method.
-     */
-    public function testGetLibraryShouldReturnNull() {
-      $this->assertNull($this->mock->getLibrary());
-    }
+    $style = 'part_1';
 
-    /**
-     * Test for the getPath method.
-     */
-    public function testGetPath() {
-      $this->assertEquals('a_icon_path', $this->mock->getPath());
-    }
+    $exploded_style = $this->mock->explodeStyle($style);
 
-    /**
-     * Test for the getIconElement method.
-     */
-    public function testGetIconElementShouldReturnAnArrayWithKeys() {
+    $this->assertArrayHasKey('iconset', $exploded_style);
+    $this->assertArrayHasKey('style', $exploded_style);
+    $this->assertEquals($exploded_style['iconset'], 'part_1');
+    $this->assertEmpty($exploded_style['style']);
 
-      $platform = $this->getMockBuilder('Drupal\social_media_links\PlatformBase')
-        ->setConstructorArgs([[], 'platform', []])
-        ->getMock();
+    $style = ':part_2';
 
-      $platform->expects($this->once())
-        ->method('getIconName')
-        ->willReturn('a_icon_name');
+    $exploded_style = $this->mock->explodeStyle($style);
 
-      $this->mock->expects(
-        $this->once()
-      )
-        ->method('getIconPath')
-        ->willReturn('a_icon_path');
-
-      $icon_element = $this->mock->getIconElement($platform, 'a_style');
-      $this->assertArrayHasKey('#theme', $icon_element);
-      $this->assertArrayHasKey('#uri', $icon_element);
-
-      $this->assertEquals('image', $icon_element['#theme']);
-      $this->assertEquals('a_icon_path', $icon_element['#uri']);
-    }
-
-    /**
-     * Test for the explodeStyle method.
-     */
-    public function testExplodeStyle() {
-      $style = "part_1:part_2";
-
-      $exploded_style = $this->mock->explodeStyle($style);
-
-      $this->assertArrayHasKey('iconset', $exploded_style);
-      $this->assertArrayHasKey('style', $exploded_style);
-
-      $this->assertEquals($exploded_style['iconset'], 'part_1');
-      $this->assertEquals($exploded_style['style'], 'part_2');
-
-      $style = 'part_1';
-
-      $exploded_style = $this->mock->explodeStyle($style);
-
-      $this->assertArrayHasKey('iconset', $exploded_style);
-      $this->assertArrayHasKey('style', $exploded_style);
-      $this->assertEquals($exploded_style['iconset'], 'part_1');
-      $this->assertEmpty($exploded_style['style']);
-
-      $style = ':part_2';
-
-      $exploded_style = $this->mock->explodeStyle($style);
-
-      $this->assertArrayHasKey('iconset', $exploded_style);
-      $this->assertArrayHasKey('style', $exploded_style);
-      $this->assertEquals($exploded_style['style'], 'part_2');
-      $this->assertEmpty($exploded_style['iconset']);
-    }
+    $this->assertArrayHasKey('iconset', $exploded_style);
+    $this->assertArrayHasKey('style', $exploded_style);
+    $this->assertEquals($exploded_style['style'], 'part_2');
+    $this->assertEmpty($exploded_style['iconset']);
   }
 }
+

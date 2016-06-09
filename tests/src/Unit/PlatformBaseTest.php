@@ -74,7 +74,7 @@ class PlatformBaseTest extends UnitTestCase {
    * Test for the getUrl method.
    */
   public function testGetUrlWillReturnAnUrl() {
-     $container = new Container();
+    $container = new Container();
     \Drupal::setContainer($container);
 
     $unrouted_url_assembler = $this->getMockBuilder('Drupal\Core\Utility\UnroutedUrlAssembler')

@@ -11,9 +11,6 @@ use Drupal\Tests\UnitTestCase;
 
 class PlatformBaseTest extends UnitTestCase {
 
-  /**
-   * @var PlatformBase
-   */
   protected $class;
 
   /**

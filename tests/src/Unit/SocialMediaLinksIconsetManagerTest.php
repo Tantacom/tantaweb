@@ -79,7 +79,8 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
     $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
       ->setConstructorArgs(
         [
-          [],
+          [
+          ],
           'a_plugin_id',
           $plugin_config
         ]

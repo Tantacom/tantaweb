@@ -6,15 +6,15 @@
 namespace Drupal\Tests\tantaweb\Unit;
 
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\DrupalKernel;
-use Drupal\social_media_links\IconsetBase;
-use Drupal\social_media_links\IconsetFinderService;
-use Drupal\social_media_links\IconsetInterface;
-use Drupal\social_media_links\SocialMediaLinksIconsetManager;
-use Drupal\system\Tests\Routing\ExceptionHandlingTest;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 
+/**
+ * Class SocialMediaLinksIconsetManagerTest
+ * @package Drupal\Tests\tantaweb\Unit
+ *
+ * @coversDefaultClass Drupal\social_media_links\SocialMediaLinksIconsetManager
+ * @group tantaweb
+ */
 class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
 
   protected $mock;

@@ -30,7 +30,7 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
   protected $moduleHandlerMock;
 
   /**
-   * Setup the test
+   * Setup the test.
    */
   public function setUp() {
     $container = new Container();
@@ -64,14 +64,10 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
   }
 
   /**
-   * Test for the getIconsets method
+   * Test for the getIconsets method.
    */
   public function testGetIconsets() {
-    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-      ->setConstructorArgs([
-        [],
-        'a_plugin_id',
-      ]);
+    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface');
 
     $plugin_config = [
       'id' => 'a_plugin_id',
@@ -81,11 +77,13 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
     ];
 
     $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-      ->setConstructorArgs([
-        [],
-        'a_plugin_id',
-        $plugin_config
-      ])
+      ->setConstructorArgs(
+        [
+          [],
+          'a_plugin_id',
+          $plugin_config
+        ]
+      )
       ->getMock();
 
     $this->mock->expects($this->any())

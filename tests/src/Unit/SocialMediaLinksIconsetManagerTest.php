@@ -29,6 +29,9 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
 
   protected $moduleHandlerMock;
 
+  /**
+   * Setup the test
+   */
   public function setUp() {
     $container = new Container();
     \Drupal::setContainer($container);
@@ -60,60 +63,46 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
       ->getMock();
   }
 
+  /**
+   * Test for the getIconsets method
+   */
   public function testGetIconsets() {
+    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+      ->setConstructorArgs([
+        [],
+        'a_plugin_id',
+      ]);
 
-    $pluginConfig = [
+    $plugin_config = [
       'id' => 'a_plugin_id',
       'name' => 'a plugin id',
       'publisher' => 'the publisher',
-      'class' => 'DummyThemes'
+      'class' => get_class($iconset_mock)
     ];
+
+    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+      ->setConstructorArgs([
+        [],
+        'a_plugin_id',
+        $plugin_config
+      ])
+      ->getMock();
 
     $this->mock->expects($this->any())
       ->method('getDefinitions')
       ->willReturn(
         [
-          'a_plugin_id' => $pluginConfig
+          'a_plugin_id' => $plugin_config
         ]
       );
 
     $this->mock->expects($this->once())
       ->method('createInstance')
       ->with('a_plugin_id')
-      ->willReturn(new DummyThemes(
-        [],
-        'a_plugin_id',
-        $pluginConfig
-      ));
-
+      ->willReturn($iconset_mock);
 
     $iconsets = $this->mock->getIconsets();
     $this->assertTrue(is_array($iconsets));
     $this->assertArrayHasKey('a_plugin_id', $iconsets);
   }
-}
-
-/**
- * Provides 'dummy' iconset.
- *
- * @Iconset(
- *   id = "dummy",
- *   name = "Dummy Themes Icons",
- *   publisher = "Dummy Themes",
- *   publisherUrl = "http://www.dummy.com/",
- *   downloadUrl = "http://www.dummy.com/dl",
- * )
- */
-class DummyThemes extends IconsetBase implements IconsetInterface {
-
-  public function getStyle() {
-    return array(
-      '32' => '32x32',
-    );
-  }
-
-  public function getIconPath($iconName, $style) {
-    return $this->path . '/PNG/' . $iconName . '.png';
-  }
-
 }

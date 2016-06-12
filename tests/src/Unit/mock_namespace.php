@@ -1,9 +1,9 @@
 <?php
-
 /**
  * @file Mock mock_namespace.php.
  */
 
+// @codeCoverageIgnoreStart
 namespace Drupal\social_media_links {
 
   use Drupal\Core\Site\Settings;
@@ -50,4 +50,6 @@ namespace Drupal\social_media_links {
   function drupal_installation_attempted() {
     return FALSE;
   }
+
+  // @codeCoverageIgnoreEnd
 }

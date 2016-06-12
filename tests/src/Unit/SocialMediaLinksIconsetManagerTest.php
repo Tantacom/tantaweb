@@ -19,15 +19,13 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
 
   protected $mock;
 
-  protected $class;
-
-  protected $reflectedClass;
-
   protected $namespacesMock;
 
   protected $cacheBackendMock;
 
   protected $moduleHandlerMock;
+
+  protected $definitions;
 
   /**
    * Setup the test.
@@ -59,42 +57,136 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
         $this->cacheBackendMock,
         $this->moduleHandlerMock
       ])
-      ->setMethods(['getDefinitions', 'createInstance'])
+      ->setMethods(['getDefinitions', 'createInstance', 'getIconsets'])
       ->getMock();
+
+    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface');
+
+    $this->definitions = [
+      'a_plugin_id' => [
+        'id' => 'a_plugin_id',
+        'name' => 'a plugin id',
+        'publisher' => 'the publisher',
+        'class' => get_class($iconset_mock)
+      ],
+      'another_plugin_id' => [
+        'id' => 'another_plugin_id',
+        'name' => 'another plugin id',
+        'publisher' => 'the other publisher',
+        'class' => get_class($iconset_mock)
+      ]
+    ];
   }
 
   /**
    * Test for the getIconsets method.
    */
   public function testGetIconsets() {
-    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface');
-
-    $plugin_config = [
-      'id' => 'a_plugin_id',
-      'name' => 'a plugin id',
-      'publisher' => 'the publisher',
-      'class' => get_class($iconset_mock)
-    ];
-
-    $iconset_mock = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-      ->setConstructorArgs([[], 'a_plugin_id', $plugin_config ])
+    $mock = $this->getMockBuilder(
+      'Drupal\social_media_links\SocialMediaLinksIconsetManager'
+    )
+      ->setConstructorArgs([
+        $this->namespacesMock,
+        $this->cacheBackendMock,
+        $this->moduleHandlerMock
+      ])
+      ->setMethods(['getDefinitions', 'createInstance'])
       ->getMock();
 
-    $this->mock->expects($this->any())
+    $iconset_mock1 = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+      ->setConstructorArgs([
+        [],
+        'a_plugin_id',
+        $this->definitions['a_plugin_id']
+      ])
+      ->getMock();
+
+    $iconset_mock2 = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+      ->setConstructorArgs([
+        [],
+        'another_plugin_id',
+        $this->definitions['another_plugin_id']
+      ])
+      ->getMock();
+
+    $mock->expects($this->once())
       ->method('getDefinitions')
-      ->willReturn(
-        [
-          'a_plugin_id' => $plugin_config
-        ]
-      );
+      ->willReturn($this->definitions);
 
-    $this->mock->expects($this->once())
+    $mock->expects($this->exactly(2))
       ->method('createInstance')
-      ->with('a_plugin_id')
-      ->willReturn($iconset_mock);
+      ->withConsecutive(['a_plugin_id'], ['another_plugin_id'])
+      ->willReturnonConsecutiveCalls($iconset_mock1, $iconset_mock2);
 
-    $iconsets = $this->mock->getIconsets();
+    $iconsets = $mock->getIconsets();
     $this->assertTrue(is_array($iconsets));
-    $this->assertArrayHasKey('a_plugin_id', $iconsets);
+
+    foreach ($iconsets as $id => $iconset) {
+      $this->assertArrayHasKey($id, $iconsets);
+      $this->assertInstanceOf(
+        'Drupal\social_media_links\IconsetInterface',
+        $iconset['instance']
+      );
+    }
+  }
+
+  /**
+   * Test for the getStyles method.
+   */
+  public function testGetStyles() {
+    $iconsets = $this->definitions;
+
+    $instances = [
+      'a_plugin_id' => $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+        ->setConstructorArgs([
+          [],
+          'a_plugin_id',
+          $this->definitions['a_plugin_id']
+        ])
+        ->setMethods(['getPath', 'getStyle'])
+        ->getMockForAbstractClass(),
+      'another_plugin_id' => $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
+        ->setConstructorArgs([
+          [],
+          'another_plugin_id',
+          $this->definitions['another_plugin_id']
+        ])
+        ->setMethods(['getPath', 'getStyle'])
+        ->getMockForAbstractClass()
+    ];
+    foreach ($this->definitions as $plugin_id => $definition) {
+      $iconsets[$plugin_id]['instance'] = $instances[$plugin_id];
+    }
+
+    $this->mock->expects($this->any())
+      ->method('getIconsets')
+      ->willReturn($iconsets);
+
+    foreach ($iconsets as $plugin_id => $iconset) {
+      $iconset['instance']->expects($this->once())
+        ->method('getPath')
+        ->willReturn($plugin_id . '_path');
+
+      $iconset['instance']->expects($this->once())
+        ->method('getStyle')
+        ->willReturn([
+          'key1' => 'style1',
+          'key2' => 'style2',
+        ]);
+    }
+
+    $styles = $this->mock->getStyles();
+
+    $this->assertTrue(is_array($styles));
+    $this->assertArrayHasKey('a_plugin_id', $styles);
+    $this->assertArrayHasKey('another_plugin_id', $styles);
+
+    foreach($styles as $plugin_id => $style) {
+      $this->assertTrue(is_array($style));
+      $this->assertArrayHasKey($plugin_id . ':key1', $styles[$plugin_id]);
+      $this->assertArrayHasKey($plugin_id . ':key2', $styles[$plugin_id]);
+      $this->assertEquals('style1', $styles[$plugin_id][$plugin_id.':key1']);
+      $this->assertEquals('style2', $styles[$plugin_id][$plugin_id.':key2']);
+    }
   }
 }

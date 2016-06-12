@@ -7,6 +7,7 @@
 namespace Drupal\Tests\tantaweb\Unit;
 
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\social_media_links\IconsetBase;
 use Drupal\Tests\UnitTestCase;
 
 include_once __DIR__ . '/mock_namespace.php';
@@ -15,6 +16,7 @@ include_once __DIR__ . '/mock_namespace.php';
  * Test the IconsetBase Class.
  *
  * @coversDefaultClass Drupal\social_media_links\IconsetBase
+ * @covers Drupal\social_media_links\IconsetBase
  * @group tantaweb
  */
 class IconsetBaseTest extends UnitTestCase {
@@ -66,6 +68,7 @@ class IconsetBaseTest extends UnitTestCase {
 
   /**
    * Test for the get Name method.
+   * @covers Drupal\social_media_links\IconsetBase::getName
    */
   public function testGetName() {
     $this->assertEquals('a_name', $this->mock->getName());
@@ -73,6 +76,7 @@ class IconsetBaseTest extends UnitTestCase {
 
   /**
    * Test for the getPublisher method.
+   * @covers Drupal\social_media_links\IconsetBase::getPublisher
    */
   public function testGetPublisher() {
     $this->assertEquals('a_publisher', $this->mock->getPublisher());

@@ -9,6 +9,11 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Utility\UnroutedUrlAssembler;
 use Drupal\Tests\UnitTestCase;
 
+/**
+ * Class PlatformBaseTest
+ * @package Drupal\social_media_links
+ * @coversDefaultClass Drupal\social_media_links\PlatformBase
+ */
 class PlatformBaseTest extends UnitTestCase {
 
   protected $class;

@@ -94,19 +94,15 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
       ->getMock();
 
     $iconset_mock1 = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-      ->setConstructorArgs([
-        [],
-        'a_plugin_id',
-        $this->definitions['a_plugin_id']
-      ])
+      ->setConstructorArgs(
+        [array(), 'a_plugin_id', $this->definitions['a_plugin_id']]
+      )
       ->getMock();
 
     $iconset_mock2 = $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-      ->setConstructorArgs([
-        [],
-        'another_plugin_id',
-        $this->definitions['another_plugin_id']
-      ])
+      ->setConstructorArgs(
+        [array(), 'another_plugin_id', $this->definitions['another_plugin_id']]
+      )
       ->getMock();
 
     $mock->expects($this->once())
@@ -138,19 +134,13 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
 
     $instances = [
       'a_plugin_id' => $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-        ->setConstructorArgs([
-          [],
-          'a_plugin_id',
-          $this->definitions['a_plugin_id']
-        ])
+        ->setConstructorArgs(
+          [[], 'a_plugin_id', $this->definitions['a_plugin_id']])
         ->setMethods(['getPath', 'getStyle'])
         ->getMockForAbstractClass(),
       'another_plugin_id' => $this->getMockBuilder('Drupal\social_media_links\IconsetInterface')
-        ->setConstructorArgs([
-          [],
-          'another_plugin_id',
-          $this->definitions['another_plugin_id']
-        ])
+        ->setConstructorArgs(
+          [[], 'another_plugin_id', $this->definitions['another_plugin_id']])
         ->setMethods(['getPath', 'getStyle'])
         ->getMockForAbstractClass()
     ];

@@ -181,12 +181,12 @@ class SocialMediaLinksIconsetManagerTest extends UnitTestCase {
     $this->assertArrayHasKey('a_plugin_id', $styles);
     $this->assertArrayHasKey('another_plugin_id', $styles);
 
-    foreach($styles as $plugin_id => $style) {
+    foreach ($styles as $plugin_id => $style) {
       $this->assertTrue(is_array($style));
       $this->assertArrayHasKey($plugin_id . ':key1', $styles[$plugin_id]);
       $this->assertArrayHasKey($plugin_id . ':key2', $styles[$plugin_id]);
-      $this->assertEquals('style1', $styles[$plugin_id][$plugin_id.':key1']);
-      $this->assertEquals('style2', $styles[$plugin_id][$plugin_id.':key2']);
+      $this->assertEquals('style1', $styles[$plugin_id][$plugin_id . ':key1']);
+      $this->assertEquals('style2', $styles[$plugin_id][$plugin_id . ':key2']);
     }
   }
 }

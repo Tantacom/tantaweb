@@ -10,9 +10,11 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Class PlatformBaseTest
+ * Class PlatformBaseTest.
+ *
  * @package Drupal\social_media_links
  * @coversDefaultClass Drupal\social_media_links\PlatformBase
+ * @group tantaweb
  */
 class PlatformBaseTest extends UnitTestCase {
 

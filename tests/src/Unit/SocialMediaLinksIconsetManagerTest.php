@@ -9,9 +9,9 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Class SocialMediaLinksIconsetManagerTest
- * @package Drupal\Tests\tantaweb\Unit
+ * Class SocialMediaLinksIconsetManagerTest.
  *
+ * @package Drupal\Tests\tantaweb\Unit
  * @coversDefaultClass Drupal\social_media_links\SocialMediaLinksIconsetManager
  * @group tantaweb
  */

@@ -16,9 +16,7 @@ include_once __DIR__ . '/mock_namespace.php';
  * Class IconsetFinderServiceTest.
  *
  * @package Drupal\social_media_links
- *
  * @coversDefault Drupal\social_media_links\IconsetFinderService
- *
  * @group tantaweb
  */
 class IconsetFinderServiceTest extends UnitTestCase {
